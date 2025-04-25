@@ -1,13 +1,39 @@
-const express = require('express')
-const app = express()
-app.get('/', (request, response) => {
-  response.send('<h1>Hello Jeniffer</h1>')
-})
+const express = require('express');
+const app = express();
 
-app.get('/api/notes', (request, response) => {
-  response.json(notes)
-})
-const PORT = 3001
+const PORT = process.env.PORT || 3000;
+function password(str) {
+    if (str.length < 8) {
+      return false;
+    }
+    if (!/[A-Z]/.test(str)) {
+      return false;
+    }
+    if (!/[a-z]/.test(str)) {
+      return false;
+    }
+    if (!/[0-9]/.test(str)) {
+      return false;
+    }
+    return true;
+  }
+
+
+app.get('/check', (req, res) => {
+    const { password } = req.query;
+
+    if (!password) {
+        return res.status(400).send('Please provide a password using ?password=yourPassword');
+    }
+
+    const result = isValidPassword(password);
+    res.send({ valid: result });
+});
+
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+app.get('/', (req, res) => {
+    res.send('password=yourPassword.');
+});
